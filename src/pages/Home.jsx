@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 
 export const productsData = [
@@ -62,158 +63,257 @@ export const productsData = [
 ];
 
 const Home = () => {
+  const [booting, setBooting] = useState(true);
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    const bootLogs = [
+      "INITIALIZING CORE_SYTEMS...",
+      "LOADING NWK_UPLINK_PROTOCOL...",
+      "AUTHORSING NODE_ACCESS...",
+      "SCANNING APPAREL_DATABASE...",
+      "ESTABLIDHING SECURE_CONNECTION...",
+      "DONE. SESSION_ACTIVE."
+    ];
+    
+    let currentLog = 0;
+    const interval = setInterval(() => {
+      if (currentLog < bootLogs.length) {
+        setLogs(prev => [...prev, bootLogs[currentLog]]);
+        currentLog++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setBooting(false), 800);
+      }
+    }, 450);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const scrollToCollection = () => {
+    document.getElementById('sys-database')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      style={{ padding: '40px' }}
-    >
-      <div style={styles.hero}>
-        <h1 style={styles.title}>THE NEWARK COLLECTION</h1>
-        <p style={styles.subtitle}>FW26 Drops. Excellence in Every Thread.</p>
-      </div>
+    <div style={styles.page}>
+      <div className="scanline-container" />
+      
+      <AnimatePresence>
+        {booting && (
+          <motion.div 
+            key="boot"
+            exit={{ opacity: 0, scale: 1.05 }}
+            style={styles.bootOverlay}
+          >
+            <div style={styles.bootBox}>
+              <div style={styles.bootHeader} className="micro-text">
+                SYS.CORE_BOOT // VER: 1.6.6.6
+              </div>
+              <div style={styles.logList}>
+                {logs.map((log, i) => (
+                  <div key={i} className="micro-text" style={{color: 'var(--accent-neon)', marginBottom: '4px'}}>
+                     {'>'} {log}
+                  </div>
+                ))}
+              </div>
+              <div className="micro-text" style={{marginTop: '20px', animate: 'flicker 1s infinite'}}>
+                [ PROCESSING... ]
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div style={styles.gallery}>
-        {productsData.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <section style={styles.heroSection}>
+        <div style={styles.hudTopLeft} className="micro-text">LOC: NWK_CORE_STATION</div>
+        <div style={styles.hudTopRight} className="micro-text">NODE_ID: 0x1666</div>
+        
+        <div style={styles.heroContent}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+            style={styles.asciiContainer}
+          >
+            <pre style={styles.asciiText} className="neon-text">
+{`   __   ____  ____  ____ 
+  /  \\ (  _ \\(  _ \\(  _ \\
+ (_  _) )   / ) _ ( )   /
+   )(  (_)\\_)(____/(_)\\_)`}
+            </pre>
+            <h1 style={styles.mainTitle} className="glitch-text">NEWARK // SYS</h1>
+          </motion.div>
 
-      <div style={styles.exploreSection}>
-        <h2 style={styles.exploreTitle}>DISCOVER NEWARK</h2>
-        <p style={styles.exploreSubtitle}>
-          Experience the culture, history, and streets that inspire 1666 Newark Inc.
-        </p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ delay: 1.5 }}
+            className="micro-text"
+            style={styles.heroTagline}
+          >
+            CONNECTED_APPAREL_ECOSYSTEM // THE_CITY_IS_SIGNAL
+          </motion.p>
 
-        <div style={styles.exploreGrid}>
-          <div style={styles.exploreCard}>
-            <h3 style={styles.exploreCardTitle}>AI Guide</h3>
-            <p style={styles.exploreCardText}>
-              Delve into Newark&apos;s rich history, landmarks, and culture with our customized AI guide.
-            </p>
-            <a
-              href="https://chatgpt.com/g/g-YDeV5cxu2-newark-historical"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="luxury-btn-outline"
-              style={styles.exploreBtn}
-            >
-              Open AI Guide
-            </a>
-          </div>
-
-          <div style={styles.exploreCard}>
-            <h3 style={styles.exploreCardTitle}>Newark Portal</h3>
-            <p style={styles.exploreCardText}>
-              Enter the Newark portal to explore locations, visuals, and the city experience in one place.
-            </p>
-            <Link
-              to="/newark-portal"
-              className="luxury-btn-outline"
-              style={styles.exploreBtn}
-            >
-              Open Newark Portal
-            </Link>
-          </div>
-
-          <div style={styles.exploreCard}>
-            <h3 style={styles.exploreCardTitle}>Earth 3D</h3>
-            <p style={styles.exploreCardText}>
-              Take an immersive 3D flyover journey through Newark to see the city from a new perspective.
-            </p>
-            <a
-              href="https://earth.google.com/web/search/Newark,+New+Jersey"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="luxury-btn-outline"
-              style={styles.exploreBtn}
-            >
-              Fly in Earth 3D
-            </a>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8 }}
+            style={styles.heroActions}
+          >
+            <button onClick={scrollToCollection} className="system-btn-solid">
+              ACCESS_DATABASE
+            </button>
+            <button onClick={scrollToCollection} className="system-btn">
+              VIEW_LOGS
+            </button>
+          </motion.div>
         </div>
-      </div>
-    </motion.div>
+
+        <div style={styles.hudBottom} className="micro-text">
+          UPLINK_STATUS: STABLE // LATENCY: 14MS // ENCRYPTION: AES-256
+        </div>
+      </section>
+
+      <section id="sys-database" style={styles.databaseSection}>
+        <div style={styles.sectionHeader}>
+            <div>
+              <p className="micro-text" style={{color: 'var(--accent-neon)'}}>DATABASE // REGISTRY</p>
+              <h2 style={styles.sectionTitle}>APPAREL_SYSTEMS</h2>
+            </div>
+            <div className="micro-text">ENTRIES_LOGGED: {productsData.length}</div>
+        </div>
+
+        <div style={styles.productGrid}>
+          {productsData.map((item, idx) => (
+            <ProductCard key={item.id} product={item} index={idx} />
+          ))}
+        </div>
+      </section>
+
+      <section style={styles.footerSection}>
+         <div style={styles.footerInner} className="glass-panel">
+            <h3 className="neon-text" style={styles.footerTitle}>SYSTEM_PORTAL</h3>
+            <p className="micro-text" style={{marginBottom: '30px'}}>UPLINK_TO_METAVERSE_AND_ARCHIVES</p>
+            <div style={styles.footerButtons}>
+              <Link to="/newark-portal" className="system-btn">LAUNCH_PORTAL</Link>
+              <a href="https://chatgpt.com/g/g-YDeV5cxu2-newark-historical" target="_blank" rel="noopener noreferrer" className="system-btn">AI_TERM</a>
+            </div>
+         </div>
+      </section>
+    </div>
   );
 };
 
 const styles = {
-  hero: {
-    textAlign: 'center',
-    marginBottom: '60px',
-    marginTop: '40px'
+  page: {
+    backgroundColor: 'var(--bg-color)',
+    color: 'var(--text-color)',
+    minHeight: '100vh',
+    position: 'relative',
+    paddingBottom: '100px'
   },
-  title: {
-    fontSize: '3rem',
-    fontWeight: '800',
-    letterSpacing: '4px',
-    marginBottom: '16px',
-    color: 'var(--accent-gold)'
+  bootOverlay: {
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: '#000',
+    zIndex: 10000,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'var(--font-mono)'
   },
-  subtitle: {
-    color: 'var(--text-muted)',
-    fontSize: '1.1rem',
-    letterSpacing: '1px'
+  bootBox: {
+    width: '100%',
+    maxWidth: '400px',
+    padding: '40px',
   },
-  gallery: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto'
+  bootHeader: {
+    marginBottom: '30px',
+    color: '#333',
+    borderBottom: '1px solid #111',
+    paddingBottom: '10px'
   },
-  exploreSection: {
-    marginTop: '100px',
-    borderTop: '1px solid var(--border-color)',
-    paddingTop: '60px',
-    textAlign: 'center'
+  logList: {
+    height: '180px',
+    overflow: 'hidden'
   },
-  exploreTitle: {
-    fontSize: '2.5rem',
-    fontWeight: '800',
-    letterSpacing: '4px',
-    marginBottom: '16px',
-    color: 'var(--accent-gold)'
-  },
-  exploreSubtitle: {
-    color: 'var(--text-muted)',
-    fontSize: '1.2rem',
-    letterSpacing: '1px',
-    marginBottom: '50px'
-  },
-  exploreGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '30px',
-    maxWidth: '1200px',
-    margin: '0 auto'
-  },
-  exploreCard: {
-    backgroundColor: 'var(--card-bg)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '12px',
-    padding: '40px 30px',
+  heroSection: {
+    height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'center',
+    position: 'relative',
+    textAlign: 'center',
+    borderBottom: '1px solid var(--border-color)',
+    padding: '0 20px'
   },
-  exploreCardTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    marginBottom: '15px'
+  hudTopLeft: { position: 'absolute', top: '40px', left: '40px', opacity: 0.5 },
+  hudTopRight: { position: 'absolute', top: '40px', right: '40px', opacity: 0.5 },
+  hudBottom: { position: 'absolute', bottom: '40px', width: '100%', left: 0, opacity: 0.5 },
+  heroContent: { maxWidth: '1000px' },
+  asciiContainer: { marginBottom: '40px' },
+  asciiText: { fontSize: 'clamp(0.4rem, 2vw, 0.8rem)', lineHeight: '1.2', marginBottom: '20px' },
+  mainTitle: {
+    fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+    fontWeight: '800',
+    letterSpacing: '12px',
+    margin: 0,
+    fontFamily: 'var(--font-mono)'
   },
-  exploreCardText: {
-    color: 'var(--text-muted)',
-    marginBottom: '30px',
-    lineHeight: '1.6'
+  heroTagline: { marginTop: '20px', letterSpacing: '2px', opacity: 0.5 },
+  heroActions: {
+    marginTop: '60px',
+    display: 'flex',
+    gap: '20px',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
   },
-  exploreBtn: {
-    display: 'inline-block',
-    textDecoration: 'none',
+  databaseSection: {
+    padding: '100px 40px',
+    maxWidth: '1400px',
+    margin: '0 auto'
+  },
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginBottom: '60px',
+    paddingBottom: '20px',
+    borderBottom: '1px solid var(--border-color)'
+  },
+  sectionTitle: {
+     fontSize: '2.5rem',
+     fontWeight: '700',
+     letterSpacing: '2px',
+     marginTop: '8px'
+  },
+  productGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: '40px'
+  },
+  footerSection: {
+    padding: '100px 40px',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  footerInner: {
+    padding: '60px',
+    textAlign: 'center',
+    maxWidth: '700px',
     width: '100%',
-    boxSizing: 'border-box'
+    border: '1px solid var(--border-neon)'
+  },
+  footerTitle: {
+    fontSize: '2rem',
+    letterSpacing: '8px',
+    marginBottom: '10px'
+  },
+  footerButtons: {
+    display: 'flex',
+    gap: '20px',
+    justifyContent: 'center'
   }
 };
 

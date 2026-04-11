@@ -1,14 +1,28 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, index = 0 }) => {
+  const nodeNumber = String(index + 1).padStart(3, '0');
+
   return (
     <Link to={`/product/${product.id}`} style={styles.cardLink}>
       <motion.div
+        className="glass-panel"
         style={styles.card}
-        whileHover={{ y: -5 }}
+        whileHover={{
+          y: -5,
+          borderColor: 'var(--accent-neon)',
+          boxShadow: '0 0 15px var(--accent-neon-dim)',
+        }}
         transition={{ duration: 0.2 }}
       >
+        <div style={styles.headerBar}>
+          <span className="micro-text" style={{ color: 'var(--accent-neon)' }}>
+            NODE_{nodeNumber} // {product.category.toUpperCase()}
+          </span>
+          <span className="micro-text" style={{ fontSize: '0.6rem' }}>SYS.ON</span>
+        </div>
+
         <div style={styles.imageContainer}>
           <motion.img
             src={product.image}
@@ -17,16 +31,18 @@ const ProductCard = ({ product }) => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.4 }}
           />
-
-          <div style={styles.comingSoonBadge}>COMING SOON</div>
+          <div style={styles.overlay}></div>
+          <div style={styles.statusBadge} className="micro-text">
+            STATUS: ACTIVE
+          </div>
         </div>
 
         <div style={styles.details}>
-          <span style={styles.category}>{product.category}</span>
-          <h3 style={styles.name}>{product.name}</h3>
-
-          <p style={styles.priceMuted}>{product.price}</p>
-          <p style={styles.comingSoonText}>Preview only · product launch pending</p>
+          <h3 style={styles.name}>{product.name.toUpperCase()}</h3>
+          <div style={styles.dataRow}>
+            <span className="micro-text">PRICE:</span>
+            <span className="neon-text" style={styles.price}>{product.price}</span>
+          </div>
         </div>
       </motion.div>
     </Link>
@@ -40,62 +56,80 @@ const styles = {
     display: 'block',
   },
   card: {
-    background: '#111',
-    borderRadius: '20px',
+    borderRadius: '0',
     overflow: 'hidden',
-    border: '1px solid rgba(255,255,255,0.08)',
-    boxShadow: '0 12px 30px rgba(0,0,0,0.25)',
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    transition: 'border-color 0.3s ease',
+  },
+  headerBar: {
+    padding: '8px 12px',
+    borderBottom: '1px solid var(--border-color)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    background: 'rgba(0,0,0,0.4)',
   },
   imageContainer: {
     position: 'relative',
     width: '100%',
     aspectRatio: '1 / 1',
-    background: 'linear-gradient(180deg, #1b1b1b 0%, #0f0f0f 100%)',
     overflow: 'hidden',
+    borderBottom: '1px solid var(--border-color)',
   },
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
     display: 'block',
+    filter: 'grayscale(20%) contrast(1.1)',
   },
-  comingSoonBadge: {
+  overlay: {
     position: 'absolute',
-    top: '14px',
-    right: '14px',
-    padding: '8px 12px',
-    borderRadius: '999px',
-    fontSize: '0.72rem',
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    background: 'rgba(255,255,255,0.92)',
-    color: '#111',
-    backdropFilter: 'blur(6px)',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'linear-gradient(180deg, transparent 50%, rgba(0,255,65,0.08) 100%)',
+    pointerEvents: 'none',
+  },
+  statusBadge: {
+    position: 'absolute',
+    top: '12px',
+    right: '12px',
+    padding: '4px 8px',
+    background: 'rgba(0,0,0,0.8)',
+    border: '1px solid var(--border-neon)',
+    color: 'var(--accent-neon)',
+    backdropFilter: 'blur(4px)',
   },
   details: {
-    padding: '16px',
-  },
-  category: {
-    fontSize: '0.78rem',
-    color: '#aaa',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
+    padding: '24px 16px',
+    background: 'rgba(0,0,0,0.6)',
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   name: {
-    margin: '8px 0 10px',
-    fontSize: '1.05rem',
+    margin: '0 0 16px 0',
+    fontSize: '1rem',
+    fontFamily: 'var(--font-mono)',
+    fontWeight: '600',
     color: '#fff',
+    letterSpacing: '1px',
+    lineHeight: '1.4',
   },
-  priceMuted: {
-    margin: 0,
-    color: '#d6d6d6',
-    fontWeight: 600,
+  dataRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    paddingTop: '12px',
   },
-  comingSoonText: {
-    marginTop: '8px',
-    fontSize: '0.84rem',
-    color: '#8d8d8d',
+  price: {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '0.9rem',
+    fontWeight: '600',
   },
 };
 

@@ -49,7 +49,7 @@ const Cart = () => {
       <div style={styles.container}>
         <h1 style={styles.title}>YOUR CART</h1>
         <p style={{marginBottom: '20px'}}>Your cart is currently empty.</p>
-        <Link to="/"><button className="luxury-btn">CONTINUE SHOPPING</button></Link>
+        <Link to="/"><button className="system-btn">RET_TO_DATABASE</button></Link>
       </div>
     );
   }
@@ -100,12 +100,12 @@ const Cart = () => {
           </div>
 
           <button 
-             className="luxury-btn" 
+             className="system-btn-solid" 
              style={{width: '100%', marginBottom: '20px'}}
              onClick={handleStripeCheckout}
              disabled={isProcessingStripe}
           >
-            {isProcessingStripe ? 'PROCESSING...' : 'CHECKOUT WITH CARD'}
+            {isProcessingStripe ? 'PROC_SESSION...' : 'EXECUTE_PAYMENT'}
           </button>
           
           <div style={{minHeight: '80px', zIndex: 1, position: 'relative', marginTop: '10px'}}>
@@ -130,7 +130,7 @@ const Cart = () => {
 
 const styles = {
   container: { padding: '40px', maxWidth: '1200px', margin: '0 auto' },
-  title: { fontSize: '2.5rem', fontWeight: '800', marginBottom: '30px', color: 'var(--accent-gold)', letterSpacing: '4px' },
+  title: { fontSize: '2.5rem', fontWeight: '800', marginBottom: '30px', color: 'var(--accent-neon)', letterSpacing: '4px', fontFamily: 'var(--font-mono)' },
   cartGrid: { display: 'grid', gridTemplateColumns: 'minmax(300px, 1.2fr) 400px', gap: '40px', alignItems: 'start' },
   itemsList: { display: 'flex', flexDirection: 'column', gap: '20px' },
   itemRow: { display: 'flex', gap: '20px', padding: '20px', backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '8px' },
@@ -142,7 +142,7 @@ const styles = {
   qtyBtn: { width: '35px', height: '35px', border: '1px solid var(--border-color)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.2rem' },
   qtyLabel: { fontWeight: 'bold', fontSize: '1.2rem' },
   itemPriceCol: { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end', minWidth: '80px' },
-  price: { fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-gold)' },
+  price: { fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-neon)', fontFamily: 'var(--font-mono)' },
   removeBtn: { fontSize: '0.8rem', color: '#ff4444', borderBottom: '1px solid #ff4444', paddingBottom: '2px', textTransform: 'uppercase' },
   summary: { backgroundColor: 'var(--card-bg)', padding: '30px', borderRadius: '8px', border: '1px solid var(--border-color)' },
   summaryRow: { display: 'flex', justifyContent: 'space-between', marginTop: '20px', color: 'var(--text-muted)' },

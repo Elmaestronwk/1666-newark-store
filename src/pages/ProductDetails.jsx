@@ -10,19 +10,16 @@ const ProductDetails = () => {
   const addToCartStorage = useCartStore(state => state.addToCart);
   
   const [selectedSize, setSelectedSize] = useState('M');
-  const [selectedColor, setSelectedColor] = useState('Black');
-  const [selectedFit, setSelectedFit] = useState('Standard Fit - Classic Logo');
-  const [rotation, setRotation] = useState(0);
-  const [zoom, setZoom] = useState(1);
+  const [selectedColor, setSelectedColor] = useState('MATTE BLACK');
   const [addedMessage, setAddedMessage] = useState(false);
 
   const handleAddToCart = () => {
-    addToCartStorage(product, 1, { size: selectedSize, color: selectedColor, fit: selectedFit });
+    addToCartStorage(product, 1, { size: selectedSize, color: selectedColor, fit: 'Standard' });
     setAddedMessage(true);
     setTimeout(() => setAddedMessage(false), 2000);
   };
 
-  if (!product) return <div style={styles.notFound}>Product not found. <Link to="/">Return to Shop</Link></div>;
+  if (!product) return <div style={styles.notFound} className="micro-text">NODE NOT FOUND. <Link to="/" className="neon-text">RETURN TO SYSTEM</Link></div>;
 
   return (
     <motion.div 
@@ -32,55 +29,57 @@ const ProductDetails = () => {
       style={styles.container}
     >
       <div style={styles.grid}>
-        <div style={styles.previewSection}>
+        <div style={styles.previewSection} className="glass-panel">
+          <div style={styles.imageHeader} className="micro-text">
+            <span>VISUAL_DATA // {product.id.toUpperCase()}</span>
+            <span className="neon-text">UPLINK_STABLE</span>
+          </div>
           <div style={styles.imageContainer}>
-            <motion.img 
+            <img 
               src={product.image} 
               alt={product.name} 
-              style={{
-                ...styles.image,
-                transform: `scale(${zoom}) rotate(${rotation}deg)`
-              }}
+              style={styles.image}
             />
-          </div>
-          
-          <div style={styles.controls}>
-            <div style={styles.controlGroup}>
-              <label style={styles.label}>3D Rotation Preview: {rotation}°</label>
-              <input 
-                type="range" 
-                min="-180" max="180" 
-                value={rotation} 
-                onChange={(e) => setRotation(e.target.value)} 
-                style={styles.slider}
-              />
-            </div>
-            <div style={styles.controlGroup}>
-              <label style={styles.label}>Model Zoom: {zoom}x</label>
-              <input 
-                type="range" 
-                min="0.5" max="2" step="0.1" 
-                value={zoom} 
-                onChange={(e) => setZoom(e.target.value)} 
-                style={styles.slider}
-              />
-            </div>
+            <div style={styles.scanlineOverlay}></div>
           </div>
         </div>
 
-        <div style={styles.detailsSection}>
-          <span style={styles.category}>{product.category}</span>
-          <h1 style={styles.title}>{product.name}</h1>
-          <p style={styles.price}>{product.price}</p>
+        <div style={styles.detailsSection} className="glass-panel">
+          <div style={styles.dataHeader}>
+            <div className="micro-text" style={{ color: 'var(--accent-neon)' }}>SYSTEM: 1666 NEWARK</div>
+            <div className="micro-text">SYS.ID: {product.id.toUpperCase()}</div>
+          </div>
           
+          <h1 style={styles.title}>{product.name.toUpperCase()}</h1>
+          
+          <div style={styles.dataGrid}>
+            <div style={styles.dataItem}>
+              <span style={styles.dataLabel} className="micro-text">STATUS</span>
+              <span style={styles.dataValue} className="neon-text">ACTIVE</span>
+            </div>
+            <div style={styles.dataItem}>
+              <span style={styles.dataLabel} className="micro-text">SIGNAL ROUTE</span>
+              <span style={styles.dataValue}>0_{product.category.toUpperCase()}</span>
+            </div>
+            <div style={styles.dataItem}>
+              <span style={styles.dataLabel} className="micro-text">FABRIC</span>
+              <span style={styles.dataValue}>HEAVYWEIGHT</span>
+            </div>
+            <div style={styles.dataItem}>
+              <span style={styles.dataLabel} className="micro-text">DATA_VALUE</span>
+              <span style={styles.dataValue} className="neon-text">{product.price}</span>
+            </div>
+          </div>
+
           <div style={styles.customizerGroup}>
-            <h4 style={styles.sectionTitle}>Select Size</h4>
+            <h4 style={styles.sectionTitle} className="micro-text">PARAMETERS: COMPUTE SIZE</h4>
             <div style={styles.pillGroup}>
               {['S', 'M', 'L', 'XL'].map(size => (
                 <button 
                   key={size}
                   style={selectedSize === size ? styles.pillSelected : styles.pill}
                   onClick={() => setSelectedSize(size)}
+                  className="micro-text"
                 >
                   {size}
                 </button>
@@ -89,13 +88,14 @@ const ProductDetails = () => {
           </div>
 
           <div style={styles.customizerGroup}>
-            <h4 style={styles.sectionTitle}>Select Color</h4>
+            <h4 style={styles.sectionTitle} className="micro-text">PARAMETERS: CHROMA</h4>
             <div style={styles.pillGroup}>
-              {['Black', 'White', 'Gold', 'Charcoal'].map(color => (
+              {['MATTE BLACK', 'OPTIC WHITE', 'NEON GREEN'].map(color => (
                 <button 
                   key={color}
                   style={selectedColor === color ? styles.pillSelected : styles.pill}
                   onClick={() => setSelectedColor(color)}
+                  className="micro-text"
                 >
                   {color}
                 </button>
@@ -103,25 +103,15 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <div style={styles.customizerGroup}>
-            <h4 style={styles.sectionTitle}>Fit / Logo Style</h4>
-            <select style={styles.select} value={selectedFit} onChange={e => setSelectedFit(e.target.value)}>
-              <option>Standard Fit - Classic Logo</option>
-              <option>Oversized Fit - Minimal Logo</option>
-              <option>Slim Fit - Monochrome Logo</option>
-            </select>
-          </div>
-
-          <button style={{...styles.addToCartBtn, width: '100%', marginTop: '20px'}} className="luxury-btn" onClick={handleAddToCart}>
-            {addedMessage ? 'ADDED TO CART ✔' : 'ADD TO CART'}
-          </button>
-          
-          <div style={{marginTop: '20px'}}>
-             <Link to="/ar-try-on">
-               <button style={{...styles.addToCartBtn, width: '100%'}} className="luxury-btn-outline">
-                 TRY IT ON IN AR
-               </button>
-             </Link>
+          <div style={styles.actionGroup}>
+            <button className="system-btn-solid" style={{ width: '100%', marginBottom: '16px', padding: '16px' }} onClick={handleAddToCart}>
+              {addedMessage ? 'SYSTEM UPDATED ✔' : 'ADD TO SYSTEM'}
+            </button>
+            <Link to="/cart" style={{display: 'block', textDecoration: 'none'}}>
+              <button className="system-btn" style={{ width: '100%', padding: '16px' }}>
+                INITIATE PURCHASE
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -132,125 +122,129 @@ const ProductDetails = () => {
 const styles = {
   container: {
     padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto'
+    maxWidth: '1300px',
+    margin: '0 auto',
+    minHeight: 'calc(100vh - 100px)',
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'minmax(300px, 1.2fr) 1fr',
-    gap: '60px',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '40px',
     alignItems: 'start'
   },
   previewSection: {
+    padding: '24px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    position: 'relative',
+  },
+  imageHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '24px',
+    borderBottom: '1px solid var(--border-color)',
+    paddingBottom: '12px',
   },
   imageContainer: {
-    backgroundColor: '#fff',
-    borderRadius: '12px',
+    position: 'relative',
+    aspectRatio: '3/4',
     overflow: 'hidden',
-    aspectRatio: '1',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '1px solid var(--border-color)',
-    position: 'relative'
+    backgroundColor: '#0a0a0a',
   },
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'contain',
-    transition: 'transform 0.1s ease-out'
+    objectFit: 'cover',
+    filter: 'grayscale(20%) contrast(1.1)',
   },
-  controls: {
-    backgroundColor: 'var(--card-bg)',
-    padding: '20px',
-    borderRadius: '8px',
-    border: '1px solid var(--border-color)',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px'
-  },
-  controlGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px'
-  },
-  label: {
-    fontSize: '0.9rem',
-    color: 'var(--text-muted)'
-  },
-  slider: {
-    width: '100%',
-    accentColor: 'var(--accent-gold)'
+  scanlineOverlay: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'linear-gradient(180deg, transparent 50%, rgba(0,255,65,0.05) 100%)',
+    pointerEvents: 'none',
   },
   detailsSection: {
+    padding: '40px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px'
+    gap: '32px',
+    position: 'sticky',
+    top: '100px',
   },
-  category: {
-    color: 'var(--accent-gold)',
-    textTransform: 'uppercase',
-    letterSpacing: '2px',
-    fontSize: '0.9rem'
+  dataHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    borderBottom: '1px solid var(--border-color)',
+    paddingBottom: '12px',
   },
   title: {
     fontSize: '2.5rem',
-    fontWeight: '800'
+    fontFamily: 'var(--font-mono)',
+    fontWeight: '800',
+    letterSpacing: '2px',
+    margin: 0,
+    lineHeight: '1.2',
   },
-  price: {
-    fontSize: '1.5rem',
-    color: 'var(--text-muted)'
+  dataGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '24px',
+    padding: '24px 0',
+    borderTop: '1px solid var(--border-color)',
+    borderBottom: '1px solid var(--border-color)',
+  },
+  dataItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  dataLabel: {
+    opacity: 0.6,
+  },
+  dataValue: {
+    fontFamily: 'var(--font-mono)',
+    fontSize: '1.1rem',
+    fontWeight: '600',
+    letterSpacing: '1px',
   },
   customizerGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px'
+    gap: '16px',
   },
   sectionTitle: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: 'var(--text-color)'
+    margin: 0,
+    opacity: 0.8,
   },
   pillGroup: {
     display: 'flex',
     gap: '12px',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   pill: {
-    padding: '10px 20px',
+    padding: '12px 24px',
     border: '1px solid var(--border-color)',
-    borderRadius: '4px',
     backgroundColor: 'transparent',
     color: 'var(--text-color)',
     cursor: 'pointer',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s ease',
   },
   pillSelected: {
-    padding: '10px 20px',
-    border: '1px solid var(--accent-gold)',
-    borderRadius: '4px',
-    backgroundColor: 'rgba(197, 160, 89, 0.1)',
-    color: 'var(--accent-gold)',
+    padding: '12px 24px',
+    border: '1px solid var(--accent-neon)',
+    backgroundColor: 'var(--accent-neon-dim)',
+    color: 'var(--accent-neon)',
     cursor: 'pointer',
-    fontWeight: '600'
+    fontWeight: '600',
+    boxShadow: '0 0 10px var(--accent-neon-dim)',
   },
-  select: {
-    padding: '12px 20px',
-    backgroundColor: 'var(--card-bg)',
-    color: 'var(--text-color)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    outline: 'none',
-    cursor: 'pointer'
+  actionGroup: {
+    marginTop: 'auto',
+    paddingTop: '32px',
   },
   notFound: {
     textAlign: 'center',
     padding: '100px',
-    fontSize: '1.5rem'
   }
 };
 

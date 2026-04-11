@@ -43,17 +43,17 @@ function ProductMockup({ color = '#d4af37', metalness = 0.55, roughness = 0.28, 
 
 function ViewerScene({ selectedMaterial, viewMode }) {
     const materialConfig = {
-        gold: { color: '#d4af37', metalness: 0.68, roughness: 0.24 },
+        neon: { color: '#00ff41', metalness: 0.6, roughness: 0.2 },
         obsidian: { color: '#1b1b1b', metalness: 0.4, roughness: 0.5 },
         silver: { color: '#c9ced6', metalness: 0.72, roughness: 0.22 },
         ivory: { color: '#f0ece2', metalness: 0.18, roughness: 0.7 },
     };
 
-    const current = materialConfig[selectedMaterial] || materialConfig.gold;
+    const current = materialConfig[selectedMaterial] || materialConfig.obsidian;
 
     return (
         <>
-            <color attach="background" args={['#0b0b0c']} />
+            <color attach="background" args={['#050505']} />
             <ambientLight intensity={0.75} />
             <directionalLight position={[4, 5, 3]} intensity={1.5} />
             <directionalLight position={[-3, 2, -2]} intensity={0.5} />
@@ -88,43 +88,42 @@ function ViewerScene({ selectedMaterial, viewMode }) {
 }
 
 export default function ProductMockupViewer() {
-    const [selectedMaterial, setSelectedMaterial] = useState('gold');
+    const [selectedMaterial, setSelectedMaterial] = useState('obsidian');
     const [viewMode, setViewMode] = useState('angled');
 
     return (
         <section style={styles.section}>
             <div style={styles.inner}>
                 <div style={styles.copyCol}>
-                    <p style={styles.eyebrow}>Featured Preview</p>
-                    <h2 style={styles.title}>Hero Product 3D Mockup</h2>
-                    <p style={styles.description}>
-                        Interactive product preview for your storefront while products are marked
-                        <strong> COMING SOON</strong>.
+                    <p style={styles.eyebrow} className="micro-text">Featured Preview</p>
+                    <h2 style={styles.title} className="neon-text">SYS.MOCKUP_V3</h2>
+                    <p style={styles.description} className="micro-text">
+                        INTERACTIVE_3D_RENDER // MATERIAL_SIMULATION // APPAREL_SYSTEMS_PREVIEW
                     </p>
 
                     <div style={styles.controls}>
                         <div style={styles.controlGroup}>
-                            <span style={styles.controlLabel}>View</span>
+                            <span style={styles.controlLabel} className="micro-text">VIEW_MODE</span>
                             <div style={styles.buttonRow}>
                                 <button
                                     style={viewMode === 'front' ? styles.activeButton : styles.button}
                                     onClick={() => setViewMode('front')}
                                 >
-                                    Front View
+                                    FRONT
                                 </button>
                                 <button
                                     style={viewMode === 'angled' ? styles.activeButton : styles.button}
                                     onClick={() => setViewMode('angled')}
                                 >
-                                    Angled View
+                                    ANGLED
                                 </button>
                             </div>
                         </div>
 
                         <div style={styles.controlGroup}>
-                            <span style={styles.controlLabel}>Material</span>
+                            <span style={styles.controlLabel} className="micro-text">MATERIAL_UPLINK</span>
                             <div style={styles.swatchRow}>
-                                {['gold', 'obsidian', 'silver', 'ivory'].map((item) => (
+                                {['neon', 'obsidian', 'silver', 'ivory'].map((item) => (
                                     <button
                                         key={item}
                                         onClick={() => setSelectedMaterial(item)}
@@ -216,20 +215,25 @@ const styles = {
     },
     button: {
         padding: '10px 16px',
-        borderRadius: '999px',
-        border: '1px solid rgba(255,255,255,0.14)',
-        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid var(--border-color)',
+        background: 'transparent',
         color: '#fff',
         cursor: 'pointer',
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.75rem',
+        letterSpacing: '1px',
+        transition: 'all 0.2s ease',
     },
     activeButton: {
         padding: '10px 16px',
-        borderRadius: '999px',
-        border: '1px solid rgba(255,255,255,0.28)',
-        background: '#ffffff',
-        color: '#111',
+        border: '1px solid var(--accent-neon)',
+        background: 'var(--accent-neon-dim)',
+        color: 'var(--accent-neon)',
         cursor: 'pointer',
         fontWeight: 700,
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.75rem',
+        letterSpacing: '1px',
     },
     swatchRow: {
         display: 'flex',
@@ -238,16 +242,19 @@ const styles = {
     },
     swatch: {
         padding: '10px 14px',
-        borderRadius: '999px',
-        border: '1px solid rgba(255,255,255,0.14)',
-        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid var(--border-color)',
+        background: 'transparent',
         color: '#fff',
         cursor: 'pointer',
         textTransform: 'capitalize',
+        fontFamily: 'var(--font-mono)',
+        fontSize: '0.75rem',
+        transition: 'all 0.2s ease',
     },
     swatchActive: {
-        background: '#fff',
-        color: '#111',
+        background: 'var(--accent-neon-dim)',
+        border: '1px solid var(--accent-neon)',
+        color: 'var(--accent-neon)',
         fontWeight: 700,
     },
     note: {
