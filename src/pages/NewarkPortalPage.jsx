@@ -154,12 +154,12 @@ const styles = {
 };
 
 export default function NewarkPortalPage() {
-    const { media, fetchMedia, isLoading } = useMediaStore();
+    const { media, fetchMedia, isLoading, error } = useMediaStore();
     const { playClick, playNav } = useSound();
 
     React.useEffect(() => {
         fetchMedia();
-    }, [fetchMedia]);
+    }, []);
 
     return (
         <div style={styles.page}>
@@ -228,22 +228,29 @@ export default function NewarkPortalPage() {
                         <h2 style={styles.sectionTitle}>Full Archive</h2>
                     </div>
 
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-                        gap: '24px',
-                        width: '100%'
-                    }}>
-                        {(media || []).filter(m => m?.is_published && !m?.is_featured).map((item) => (
-                            <MediaPostCard key={item?.id || Math.random()} item={item} />
-                        ))}
-                        {(media || []).filter(m => m?.is_published).length === 0 && !isLoading && (
-                            <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '100px 0', opacity: 0.5}}>
-                                <p className="hud-label">No live data streams detected</p>
-                                <Link to="/admin" className="luxury-btn" style={{marginTop: '20px'}}>Initialize First Post</Link>
-                            </div>
-                        )}
-                    </div>
+                    {/* Show connection status in dev if error */}
+                    {error && (
+                        <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '20px', marginBottom: '20px', background: 'rgba(255,50,50,0.08)', border: '1px solid rgba(255,50,50,0.2)', borderRadius: '12px'}}>
+                            <p style={{fontSize: '11px', color: 'rgba(255,100,100,0.8)', fontFamily: 'monospace'}}>DB_ERROR: {error}</p>
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '40px 0'}}>
+                            <p className="hud-label" style={{opacity: 0.5}}>FETCHING_SIGNAL...</p>
+                        </div>
+                    )}
+
+                    {!isLoading && (media || []).filter(m => m?.is_published && !m?.is_featured).map((item) => (
+                        <MediaPostCard key={item?.id || Math.random()} item={item} />
+                    ))}
+
+                    {!isLoading && (media || []).filter(m => m?.is_published).length === 0 && (
+                        <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '80px 0'}}>
+                            <p style={{fontSize: '13px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', fontFamily: 'monospace'}}>No live data streams detected</p>
+                            <p style={{fontSize: '11px', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace'}}>Publish your first post from the Admin Portal to see content here.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

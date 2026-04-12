@@ -7,7 +7,7 @@ export const useMediaStore = create((set, get) => ({
   error: null,
 
   fetchMedia: async () => {
-    set({ isLoading: true });
+    set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase
         .from('media')
