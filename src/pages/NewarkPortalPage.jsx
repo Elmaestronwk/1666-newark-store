@@ -2,8 +2,6 @@ import React from 'react';
 import { Navigation, ArrowUpRight, Plus } from 'lucide-react';
 import { places } from '../store/places';
 import PlaceCard from '../components/PlaceCard';
-import { useMediaStore } from '../store/mediaStore';
-import MediaPostCard from '../components/media/MediaPostCard';
 import { useSound } from '../hooks/useSound';
 import { Link } from 'react-router-dom';
 
@@ -154,12 +152,7 @@ const styles = {
 };
 
 export default function NewarkPortalPage() {
-    const { media, fetchMedia, isLoading } = useMediaStore();
     const { playClick, playNav } = useSound();
-
-    React.useEffect(() => {
-        fetchMedia();
-    }, [fetchMedia]);
 
     return (
         <div style={styles.page}>
@@ -202,52 +195,6 @@ export default function NewarkPortalPage() {
             </section>
 
             <section id="places" style={styles.section}>
-                <div style={styles.container}>
-                    {/* Featured Section */}
-                    {(media || []).some(m => m?.is_published && m?.is_featured) && (
-                        <div style={{gridColumn: '1/-1', marginBottom: '40px'}}>
-                            <div style={styles.sectionHead}>
-                                <p style={styles.sectionKicker}>High Priority Signal</p>
-                                <h2 style={styles.sectionTitle}>Featured Protocol</h2>
-                            </div>
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
-                                gap: '32px',
-                            }}>
-                                {(media || []).filter(m => m?.is_published && m?.is_featured).map((item) => (
-                                    <MediaPostCard key={item?.id || Math.random()} item={item} featured />
-                                ))}
-                            </div>
-                            <div style={{marginTop: '60px', borderBottom: '1px solid rgba(255,255,255,0.08)'}} />
-                        </div>
-                    )}
-
-                    <div style={styles.sectionHead}>
-                        <p style={styles.sectionKicker}>Broadcast Feed</p>
-                        <h2 style={styles.sectionTitle}>Full Archive</h2>
-                    </div>
-
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-                        gap: '24px',
-                        width: '100%'
-                    }}>
-                        {(media || []).filter(m => m?.is_published && !m?.is_featured).map((item) => (
-                            <MediaPostCard key={item?.id || Math.random()} item={item} />
-                        ))}
-                        {(media || []).filter(m => m?.is_published).length === 0 && !isLoading && (
-                            <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '100px 0', opacity: 0.5}}>
-                                <p className="hud-label">No live data streams detected</p>
-                                <Link to="/admin" className="luxury-btn" style={{marginTop: '20px'}}>Initialize First Post</Link>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            <section id="legacy-places" style={styles.section}>
                 <div style={styles.container}>
                     <div style={styles.sectionHead}>
                         <p style={styles.sectionKicker}>Historical Points</p>
