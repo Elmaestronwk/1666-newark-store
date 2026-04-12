@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigation, ArrowUpRight } from 'lucide-react';
 import { mapUrl, earthUrl } from '../store/places';
+import { useSound } from '../hooks/useSound';
 
 const styles = {
     card: {
@@ -66,6 +67,8 @@ const styles = {
 };
 
 export default function PlaceCard({ place }) {
+    const { playClick } = useSound();
+
     return (
         <article style={styles.card} className="glass-panel">
             <div style={styles.imageWrap}>
@@ -87,6 +90,7 @@ export default function PlaceCard({ place }) {
                         rel="noreferrer"
                         className="system-btn-solid"
                         style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'center' }}
+                        onClick={() => playClick()}
                     >
                         MAPS
                         <ArrowUpRight size={16} />
@@ -98,6 +102,7 @@ export default function PlaceCard({ place }) {
                         rel="noreferrer"
                         className="system-btn"
                         style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'center' }}
+                        onClick={() => playClick()}
                     >
                         EARTH
                         <Navigation size={16} />

@@ -6,14 +6,16 @@ const Cancel = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      style={{ padding: '100px 40px', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}
+      style={{ padding: '160px 40px', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}
+      className="reveal-anim"
     >
-      <h1 style={{ fontSize: '3rem', color: '#ff4444', marginBottom: '20px' }}>ORDER CANCELLED</h1>
-      <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '40px' }}>
-        Your checkout session was cancelled. If this was a mistake, you can return to your cart and try again.
+      <div className="micro-label" style={{ marginBottom: '20px', color: '#ff4444' }}>SESSION INTERRUPTED</div>
+      <h1 className="section-title">ORDER <span className="gold-text">CANCELLED</span></h1>
+      <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '60px', lineHeight: '1.8' }}>
+        Your checkout session has been terminated. If this was unintended, you may restore your acquisition by returning to the bag.
       </p>
       <Link to="/cart">
-        <button className="luxury-btn-outline">RETURN TO CART</button>
+        <button className="luxury-btn-outline">RETURN TO BAG</button>
       </Link>
     </motion.div>
   );

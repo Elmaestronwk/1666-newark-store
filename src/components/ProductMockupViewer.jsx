@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, RoundedBox, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
+import { useSound } from '../hooks/useSound';
 
 function ProductMockup({ color = '#d4af37', metalness = 0.55, roughness = 0.28, angledView = true }) {
     const material = useMemo(() => {
@@ -90,6 +91,7 @@ function ViewerScene({ selectedMaterial, viewMode }) {
 export default function ProductMockupViewer() {
     const [selectedMaterial, setSelectedMaterial] = useState('obsidian');
     const [viewMode, setViewMode] = useState('angled');
+    const { playClick, playAction } = useSound();
 
     return (
         <section style={styles.section}>
@@ -107,13 +109,15 @@ export default function ProductMockupViewer() {
                             <div style={styles.buttonRow}>
                                 <button
                                     style={viewMode === 'front' ? styles.activeButton : styles.button}
-                                    onClick={() => setViewMode('front')}
+                                    onClick={() => { setViewMode('front'); playClick(); }}
+                                    onMouseEnter={() => playAction()}
                                 >
                                     FRONT
                                 </button>
                                 <button
                                     style={viewMode === 'angled' ? styles.activeButton : styles.button}
-                                    onClick={() => setViewMode('angled')}
+                                    onClick={() => { setViewMode('angled'); playClick(); }}
+                                    onMouseEnter={() => playAction()}
                                 >
                                     ANGLED
                                 </button>
@@ -126,7 +130,8 @@ export default function ProductMockupViewer() {
                                 {['neon', 'obsidian', 'silver', 'ivory'].map((item) => (
                                     <button
                                         key={item}
-                                        onClick={() => setSelectedMaterial(item)}
+                                        onClick={() => { setSelectedMaterial(item); playClick(); }}
+                                        onMouseEnter={() => playAction()}
                                         style={{
                                             ...styles.swatch,
                                             ...(selectedMaterial === item ? styles.swatchActive : {}),

@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { productsData } from './Home';
 import { useCartStore } from '../store/cartStore';
+import { useSound } from '../hooks/useSound';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const product = productsData.find(p => p.id === id);
   const addToCartStorage = useCartStore(state => state.addToCart);
+  const { playClick, playSuccess, playNav } = useSound();
   
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('MATTE BLACK');
@@ -15,11 +17,12 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCartStorage(product, 1, { size: selectedSize, color: selectedColor, fit: 'Standard' });
+    playSuccess();
     setAddedMessage(true);
     setTimeout(() => setAddedMessage(false), 2000);
   };
 
-  if (!product) return <div style={styles.notFound} className="micro-text">NODE NOT FOUND. <Link to="/" className="neon-text">RETURN TO SYSTEM</Link></div>;
+  if (!product) return <div style={styles.notFound} className="micro-label">PRODUCT NOT FOUND. <Link to="/" className="gold-text">RETURN HOME</Link></div>;
 
   return (
     <motion.div 
@@ -27,59 +30,52 @@ const ProductDetails = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       style={styles.container}
+      className="reveal-anim"
     >
       <div style={styles.grid}>
-        <div style={styles.previewSection} className="glass-panel">
-          <div style={styles.imageHeader} className="micro-text">
-            <span>VISUAL_DATA // {product.id.toUpperCase()}</span>
-            <span className="neon-text">UPLINK_STABLE</span>
-          </div>
+        <div style={styles.previewSection}>
           <div style={styles.imageContainer}>
             <img 
               src={product.image} 
               alt={product.name} 
               style={styles.image}
             />
-            <div style={styles.scanlineOverlay}></div>
+          </div>
+          <div style={styles.previewFooter} className="micro-label">
+            1666 NEWARK // {product.category}
           </div>
         </div>
 
-        <div style={styles.detailsSection} className="glass-panel">
-          <div style={styles.dataHeader}>
-            <div className="micro-text" style={{ color: 'var(--accent-neon)' }}>SYSTEM: 1666 NEWARK</div>
-            <div className="micro-text">SYS.ID: {product.id.toUpperCase()}</div>
+        <div style={styles.detailsSection}>
+          <div style={styles.brandHeader} className="micro-label">
+            COLLECTION RELEASE 001
           </div>
           
-          <h1 style={styles.title}>{product.name.toUpperCase()}</h1>
+          <h1 style={styles.title}>{product.name}</h1>
           
-          <div style={styles.dataGrid}>
-            <div style={styles.dataItem}>
-              <span style={styles.dataLabel} className="micro-text">STATUS</span>
-              <span style={styles.dataValue} className="neon-text">ACTIVE</span>
+          <div style={styles.infoGrid}>
+            <div style={styles.infoItem}>
+              <span style={styles.infoLabel} className="micro-label">AVAILABILITY</span>
+              <span style={styles.infoValue} className="gold-text-static">COMING SOON</span>
             </div>
-            <div style={styles.dataItem}>
-              <span style={styles.dataLabel} className="micro-text">SIGNAL ROUTE</span>
-              <span style={styles.dataValue}>0_{product.category.toUpperCase()}</span>
-            </div>
-            <div style={styles.dataItem}>
-              <span style={styles.dataLabel} className="micro-text">FABRIC</span>
-              <span style={styles.dataValue}>HEAVYWEIGHT</span>
-            </div>
-            <div style={styles.dataItem}>
-              <span style={styles.dataLabel} className="micro-text">DATA_VALUE</span>
-              <span style={styles.dataValue} className="neon-text">{product.price}</span>
+            <div style={styles.infoItem}>
+              <span style={styles.infoLabel} className="micro-label">PRICE</span>
+              <span style={styles.infoValue}>{product.price}</span>
             </div>
           </div>
 
-          <div style={styles.customizerGroup}>
-            <h4 style={styles.sectionTitle} className="micro-text">PARAMETERS: COMPUTE SIZE</h4>
+          <p style={styles.description}>
+            A premium architectural piece crafted for the modern city signal. Part of our core collection, this {product.category.toLowerCase()} embodies the futuristic identity of Newark.
+          </p>
+
+          <div style={styles.optionGroup}>
+            <h4 style={styles.sectionLabel} className="micro-label">SIZE</h4>
             <div style={styles.pillGroup}>
               {['S', 'M', 'L', 'XL'].map(size => (
                 <button 
                   key={size}
                   style={selectedSize === size ? styles.pillSelected : styles.pill}
-                  onClick={() => setSelectedSize(size)}
-                  className="micro-text"
+                  onClick={() => { setSelectedSize(size); playClick(); }}
                 >
                   {size}
                 </button>
@@ -87,15 +83,14 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <div style={styles.customizerGroup}>
-            <h4 style={styles.sectionTitle} className="micro-text">PARAMETERS: CHROMA</h4>
+          <div style={styles.optionGroup}>
+            <h4 style={styles.sectionLabel} className="micro-label">FINISH</h4>
             <div style={styles.pillGroup}>
-              {['MATTE BLACK', 'OPTIC WHITE', 'NEON GREEN'].map(color => (
+              {['MATTE BLACK', 'OPTIC WHITE', 'METALLIC GOLD'].map(color => (
                 <button 
                   key={color}
                   style={selectedColor === color ? styles.pillSelected : styles.pill}
-                  onClick={() => setSelectedColor(color)}
-                  className="micro-text"
+                  onClick={() => { setSelectedColor(color); playClick(); }}
                 >
                   {color}
                 </button>
@@ -104,12 +99,12 @@ const ProductDetails = () => {
           </div>
 
           <div style={styles.actionGroup}>
-            <button className="system-btn-solid" style={{ width: '100%', marginBottom: '16px', padding: '16px' }} onClick={handleAddToCart}>
-              {addedMessage ? 'SYSTEM UPDATED ✔' : 'ADD TO SYSTEM'}
+            <button className="luxury-btn" style={styles.disabledBtn} disabled>
+              SIGNAL_PENDING // COMING SOON
             </button>
-            <Link to="/cart" style={{display: 'block', textDecoration: 'none'}}>
-              <button className="system-btn" style={{ width: '100%', padding: '16px' }}>
-                INITIATE PURCHASE
+            <Link to="/" style={{display: 'block', textDecoration: 'none'}}>
+              <button className="luxury-btn-outline" style={{ width: '100%' }} onClick={() => playNav()}>
+                RETURN TO INDEX
               </button>
             </Link>
           </div>
@@ -121,130 +116,132 @@ const ProductDetails = () => {
 
 const styles = {
   container: {
-    padding: '40px',
-    maxWidth: '1300px',
+    padding: '80px 60px',
+    maxWidth: '1400px',
     margin: '0 auto',
     minHeight: 'calc(100vh - 100px)',
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '40px',
+    gridTemplateColumns: '1.2fr 0.8fr',
+    gap: '100px',
     alignItems: 'start'
   },
   previewSection: {
-    padding: '24px',
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
   },
-  imageHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '24px',
-    borderBottom: '1px solid var(--border-color)',
-    paddingBottom: '12px',
-  },
   imageContainer: {
     position: 'relative',
-    aspectRatio: '3/4',
+    aspectRatio: '1 / 1.25',
     overflow: 'hidden',
-    backgroundColor: '#0a0a0a',
+    backgroundColor: '#000',
+    border: '1px solid var(--gold-border-subtle)',
+    boxShadow: '0 40px 80px rgba(0,0,0,0.6)',
   },
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    filter: 'grayscale(20%) contrast(1.1)',
   },
-  scanlineOverlay: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    background: 'linear-gradient(180deg, transparent 50%, rgba(0,255,65,0.05) 100%)',
-    pointerEvents: 'none',
+  previewFooter: {
+    marginTop: '20px',
+    textAlign: 'center',
+    opacity: 0.5,
   },
   detailsSection: {
-    padding: '40px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '32px',
+    gap: '40px',
     position: 'sticky',
-    top: '100px',
+    top: '120px',
   },
-  dataHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    borderBottom: '1px solid var(--border-color)',
-    paddingBottom: '12px',
+  brandHeader: {
+    color: 'var(--gold-soft)',
   },
   title: {
-    fontSize: '2.5rem',
-    fontFamily: 'var(--font-mono)',
+    fontSize: '3.5rem',
+    fontFamily: 'var(--font-sans)',
     fontWeight: '800',
-    letterSpacing: '2px',
+    letterSpacing: '-0.02em',
     margin: 0,
-    lineHeight: '1.2',
+    lineHeight: '1',
+    textTransform: 'uppercase'
   },
-  dataGrid: {
+  infoGrid: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '24px',
-    padding: '24px 0',
-    borderTop: '1px solid var(--border-color)',
-    borderBottom: '1px solid var(--border-color)',
+    gap: '40px',
+    padding: '30px 0',
+    borderTop: '1px solid var(--gold-border-subtle)',
+    borderBottom: '1px solid var(--gold-border-subtle)',
   },
-  dataItem: {
+  infoItem: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
+    gap: '10px',
   },
-  dataLabel: {
-    opacity: 0.6,
+  infoLabel: {
+    opacity: 0.5,
   },
-  dataValue: {
-    fontFamily: 'var(--font-mono)',
+  infoValue: {
     fontSize: '1.1rem',
     fontWeight: '600',
-    letterSpacing: '1px',
   },
-  customizerGroup: {
+  description: {
+    fontSize: '1.1rem',
+    lineHeight: '1.8',
+    color: 'var(--text-secondary)',
+    margin: 0,
+  },
+  optionGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '20px',
   },
-  sectionTitle: {
-    margin: 0,
-    opacity: 0.8,
-  },
+  sectionLabel: {},
   pillGroup: {
     display: 'flex',
     gap: '12px',
     flexWrap: 'wrap',
   },
   pill: {
-    padding: '12px 24px',
-    border: '1px solid var(--border-color)',
+    padding: '14px 28px',
+    border: '1px solid var(--gold-border-subtle)',
     backgroundColor: 'transparent',
-    color: 'var(--text-color)',
+    color: 'var(--text-primary)',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.8rem',
+    fontWeight: '600',
   },
   pillSelected: {
-    padding: '12px 24px',
-    border: '1px solid var(--accent-neon)',
-    backgroundColor: 'var(--accent-neon-dim)',
-    color: 'var(--accent-neon)',
+    padding: '14px 28px',
+    border: '1px solid var(--gold-primary)',
+    backgroundColor: 'var(--gold-primary)',
+    color: '#000',
     cursor: 'pointer',
     fontWeight: '600',
-    boxShadow: '0 0 10px var(--accent-neon-dim)',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.8rem',
   },
   actionGroup: {
-    marginTop: 'auto',
-    paddingTop: '32px',
+    marginTop: '20px',
+  },
+  disabledBtn: {
+    width: '100%',
+    marginBottom: '20px',
+    opacity: 0.5,
+    cursor: 'not-allowed',
+    borderStyle: 'dashed',
+    backgroundColor: 'rgba(212, 175, 55, 0.05)',
   },
   notFound: {
     textAlign: 'center',
-    padding: '100px',
+    padding: '160px 60px',
+    fontSize: '1.5rem',
   }
 };
 

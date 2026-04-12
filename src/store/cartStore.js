@@ -6,6 +6,10 @@ export const useCartStore = create(
     (set, get) => ({
       items: [],
       addToCart: (product, quantity = 1, options = {}) => {
+        // CATALOG MODE PROTECTION
+        console.warn('1666 // SYSTEM: CART_UPLINK_DISABLED (CATALOG_MODE_ACTIVE)');
+        return;
+        
         set((state) => {
           const existingItemIndex = state.items.findIndex(
             (i) => i.id === product.id && i.size === options.size && i.color === options.color && i.fit === options.fit

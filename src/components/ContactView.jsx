@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { Mail, Terminal, Activity } from 'lucide-react';
+import { useSound } from '../hooks/useSound';
 
 const ContactView = () => {
   const email = '21maxexpo@gmail.com';
+  const { playNav } = useSound();
 
   return (
     <motion.div 
@@ -37,6 +39,7 @@ const ContactView = () => {
             href={`mailto:${email}`} 
             className="system-btn-solid"
             style={styles.actionBtn}
+            onClick={() => playNav()}
           >
             SEND_TRANSMISSION
           </a>

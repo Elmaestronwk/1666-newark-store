@@ -7,16 +7,19 @@ import Cart from './pages/Cart';
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
 import NewarkPortalPage from './pages/NewarkPortalPage';
+import AdminPortal from './pages/AdminPortal';
+import SoundManager from './components/SoundManager';
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        <div className="scanline"></div>
+        <SoundManager />
         <Topbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/newark-portal" element={<NewarkPortalPage />} />
+          <Route path="/admin" element={<AdminPortal />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/contact" element={<ContactView />} />
           <Route path="/cart" element={<Cart />} />
