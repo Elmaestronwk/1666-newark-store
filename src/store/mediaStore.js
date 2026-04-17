@@ -11,12 +11,7 @@ export const useMediaStore = create((set, get) => ({
     try {
       const { data, error } = await supabase
         .from('media')
-        .select(`
-          *,
-          comments (*),
-          reviews (*)
-        `)
-        .order('sort_order', { ascending: true })
+        .select(`*, comments (*), reviews (*)`)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
